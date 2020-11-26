@@ -1,2 +1,2 @@
 # Projet4AFDTD
-3D FDTD pour gagner des libertés
+3D FDTD pour gagner en libertés
