@@ -1,8 +1,9 @@
 // 3D simulation of a patch antenna.
 
-#include <math.h>
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #define IE 62
 #define JE 120
@@ -90,7 +91,7 @@ void main()
     eps_sub = 2.2;
     printf("%f  \n", eps_sub);
 
-    for (j = 0; ji < JE; j++)
+    for (j = 0; j < JE; j++)
     {
         for (i = 0; i < IE; i++)
         {
@@ -161,13 +162,13 @@ void main()
 
     t0 = 150.0;
     spread = 25.0;
-    printf("pulse width is %12.5e  \n" spread * dt);
+    printf("pulse width is %12.5f  \n",spread * dt);
     T = 0;
     nsteps = 1;
 
     fpt = fopen("Time", "w");
 
-    while (nsteps > o)
+    while (nsteps > 0)
     {
         printf("nsteps --> ");
         scanf("%d", &nsteps);
@@ -201,7 +202,7 @@ void main()
                     {
                         curl_h = (ra_y * (hz[i][j][k] - hz[i][j - 1][k]) - hy[i][j][k] + hy[i][j][k - 1]);
                         idxl[i][j][k] = idxl[i][j][k] + curl_h;
-                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * .5 * (curl_h + gil[i] * idxl[i][j][k]);
+                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * .5 * (curl_h + gi1[i] * idxl[i][j][k]);
                     }
                 }
             }
@@ -242,7 +243,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][j][k] = idyl[i][j][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gjl[j] * idyl[i][j][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
                     }
                 }
             }
@@ -255,7 +256,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][j][k] = idyl[i][j][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gjl[j] * idyl[i][j][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
                     }
                 }
             }
@@ -269,7 +270,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][jyh][k] = idyl[i][jyh][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gjl[j] * idyh[i][jyh][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
                     }
                 }
             }
@@ -284,7 +285,7 @@ void main()
                     {
                         curl_h = (ra_x * (hy[i][j][k] - hy[i - 1][j][k]) - ra_y * (hx[i][j][k] - hx[i][j - 1][k]));
                         idzl[i][j][k] = idzl[i][j][k] + curl_h;
-                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gkl[k] * idzl[i][j][k]);
+                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gk1[k] * idzl[i][j][k]);
                     }
                 }
             }
@@ -310,7 +311,7 @@ void main()
                         kzh = k - kb - 1;
                         curl_h = (ra_x * (hy[i][j][k] - hy[i - 1][j][k]) - ra_y * (hx[i][j][k] - hx[i][j - 1][k]));
                         idzh[i][j][kzh] = idzh[i][j][kzh] + curl_h;
-                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gkl[k] * idzl[i][j][kzh]);
+                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gk1[k] * idzl[i][j][kzh]);
                     }
                 }
             }
@@ -354,6 +355,146 @@ void main()
             }
 
             //Calcul de champ Hx (fin page 139)
+
+            //FIN Romain Début anass
+
+            for (i = 0; i < ia; i++)
+            {
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k])) ;
+                        ihxl[i][j][k] = ihxl[i][j][k] + curl_e;
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxl[i][j][k]);
+                    }
+                }
+            }
+            for (i = ia; i <= ib; i++)
+            {
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k]) );
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * curl_e;
+                    }
+                }
+            }
+            for (i = ib + 1; i < IE; i++)
+            {
+                ixh = i - ib - 1;
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k]) );
+                        ihxh[ixh][j][k] = ihxh[i][j][k] + curl_e;
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
+                    }
+                }
+            }
+
+            /* incident Hx */
+            for (i = istart; i <= iend; i++)
+            {
+                for (k = 0; k <= ktop; k++)
+                {
+                    hx[i][ja - 1][k] = hx[i][ja - 1][k] + (.5 / eps_sub) * shape[i][k] * ez_inc[ja];
+                }
+            }
+            /* claclulated  Hy filed */
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = 0; j < ja; j++)
+                {
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k]) ;
+                        ihyl[i][j][k] = ihyl[i][j][k] + curl_e;
+                        hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk2[j] * .5 * (curl_e + fj1[i] * ihyl[i][j][k]);
+                    }
+                }
+            }
+
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = ja; j <= jb; j++)
+                {
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k] );
+                        hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk3[j] * .5 * curl_e;
+                    }
+                }
+            }
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = jb + 1; j < JE; j++)
+                {
+                    jyh = j - jb - 1;
+                    for (k = 0; k < KE - 1; k++)
+                    {
+                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k] );
+                        ihyh[i][jyh][k] = ihyh[i][jyh][k] + curl_e;
+                        hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk2[j] * .5 * (curl_e + fj1[i] * ihyl[i][j][k]);
+                    }
+                }
+            }
+            /* calculatte the Hz fieled */
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = 0; k < ka; k++)
+                    {
+                        curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j][k] - ex[i][j][k]));
+                        ihzl[i][j][k] = ihzl[i][j][k] + curl_e;
+                        hz[i][j][k] = fi3[j] * fj3[k] * hz[i][j][k] + fi2[j] * fk2[j] * .5 * (curl_e + fk1[i] * ihzl[i][j][k]);
+                    }
+                }
+            }
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = ka; k <= kb; k++)
+                    {
+                        curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j + 1][k] - ey[i][j][k]));
+                        hz[i][j][k] = fi3[j] * fj3[j] * hz[i][j][k] + fi2[j] * fj2[j] * .5 * curl_e;
+                    }
+                }
+            }
+
+            for (i = 0; i < IE - 1; i++)
+            {
+                for (j = 0; j < JE - 1; j++)
+                {
+                    for (k = kb + 1; k < KE; k++)
+                    {
+                        kzh = k - kb - 1;
+                        curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j + 1][k] - ey[i][j][k]));
+                        ihzh[i][j][kzh] = ihzh[i][j][kzh] + curl_e;
+                        hz[i][j][k] = fi3[j] * fj3[j] * hz[i][j][k] + fi2[j] * fj2[j] * .5 * (curl_e + fk1[k] * ihzh[i][j][kzh]);
+                    }
+                }
+            }
+
         }
+            /* end of the main FDTD LOOP */
+            /* write the E field out to file "Ez" */
+            fp = fopen("Ez", "w");
+            for (j = 0; j < JE; j++)
+            {
+                for (i = 0; i < IE; i++)
+                {
+                    fprintf(fp, "%9.6f", ez[i][j][ktop]);
+                }
+                fprintf(fp, "\n");
+            }
+            fclose(fp);
+            printf ("t=%4.0f\n",T);
+        
     }
+    fclose(fpt);
 }
