@@ -1,6 +1,5 @@
 // 3D simulation of a patch antenna.
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -77,25 +76,25 @@ void main()
     pi = 3.14159;
     epsz = 8.8e-12;
     muz = 4 * pi * 1.e-7;
-    ddz = 0.265e-3; //taille des cellules
-    ra_y = 0.6625;
-    ra_x = 0.6812;
+    ddz = .265e-3; //taille des cellules
+    ra_y = .6625;
+    ra_x = .6812;
     dt = ddz / 6e8; //pas temporel
 
-    printf("%12.5e %12.5e    \n", ddz, dt);
+    printf("ddz : %12.5e  dt : %12.5e    \n", ddz, dt);
 
     // INITIALIZATION DES PARAMETRES, CALCUL DES PARAMETRES PML
 
     //  Constante Dielectric du substrat
 
     eps_sub = 2.2;
-    printf("%f  \n", eps_sub);
+    printf("eps_sub : %f  \n", eps_sub);
 
     for (j = 0; j < JE; j++)
     {
         for (i = 0; i < IE; i++)
         {
-            for (k = 0; k < ktop; k++)
+            for (k = 0; k <= ktop; k++)
             {
                 gax[i][j][k] = 1. / eps_sub;
                 gay[i][j][k] = 1. / eps_sub;
@@ -112,14 +111,14 @@ void main()
         {
             k = 0;
             gax[i][j][k] = 0;
-            gaz[i][j][k] = 0;
+            gay[i][j][k] = 0;
         }
     }
 
     istart = ia + 6;
     iend = istart + 6;
     i_ref = istart + (iend - istart) / 2;
-    printf("%d %d %d\n", istart, iend, i_ref);
+    printf("istart : %d  iend : %d  i_ref : %d\n", istart, iend, i_ref);
 
     half_wv = (iend - istart) / 2.;
     printf("half_wv = %5.2f\n", half_wv);
@@ -132,7 +131,7 @@ void main()
         }
     }
 
-    // ajout du conducteur jusqu'au partch à k = ktop+1
+    // ajout du conducteur jusqu'au patch à k = ktop+1
 
     for (j = 1; j <= j_patch_st; j++)
     {
@@ -146,9 +145,9 @@ void main()
         }
     }
 
-    // ajout du patch à k = ktop
+    // ajout du patch rectangulaire à k = ktop
 
-    for (j = j_patch_st; j <= j_patch_end; j++)
+    for (j = j_patch_st; j <= j_patch_end; j++) 
     {
         for (i = ia + 1; i <= ib - 1; i++)
         {
@@ -162,7 +161,7 @@ void main()
 
     t0 = 150.0;
     spread = 25.0;
-    printf("pulse width is %12.5f  \n",spread * dt);
+    printf("Pulse width is %12.5e  \n", spread * dt);
     T = 0;
     nsteps = 1;
 
@@ -172,7 +171,7 @@ void main()
     {
         printf("nsteps --> ");
         scanf("%d", &nsteps);
-        printf("%d  \n", nsteps);
+        printf("nsteps : %d  \n", nsteps);
 
         for (n = 1; n < nsteps; n++)
         {
@@ -190,7 +189,7 @@ void main()
             //Source
             pulse = exp(-.5 * (pow((t0 - T) / spread, 2.0)));
             ez_inc[ja - 2] = pulse;
-            printf("%4.0f %6.2f \n", T, pulse);
+            printf("T : %4.0f  Pulse : %6.2e \n", T, pulse);
 
             //calcul du champ Dx
 
@@ -255,27 +254,26 @@ void main()
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
-                        idyl[i][j][k] = idyl[i][j][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * curl_h;
                     }
                 }
             }
 
             for (i = 1; i < IE; i++)
             {
-                for (j = jb + 1; j <= JE; j++)
+                for (j = jb + 1; j < JE; j++)
                 {
                     jyh = j - jb - 1;
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][jyh][k] = idyl[i][jyh][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
                     }
                 }
             }
 
-            //calcul du champ DZ
+            //calcul du champ Dz
 
             for (i = 1; i < IE; i++)
             {
@@ -327,7 +325,7 @@ void main()
             }
 
             // Calcul de E depuis le champ D
-
+//////////////////STOP CORRECTION ///////////////////////////////////////////////////////////////////////////////////////////////////////
             // Ex et Ey sont à 0 pour k=0
 
             for (i = 1; i < IE - 1; i++)
@@ -364,7 +362,7 @@ void main()
                 {
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k])) ;
+                        curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxl[i][j][k] = ihxl[i][j][k] + curl_e;
                         hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxl[i][j][k]);
                     }
@@ -376,7 +374,7 @@ void main()
                 {
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k]) );
+                        curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * curl_e;
                     }
                 }
@@ -388,7 +386,7 @@ void main()
                 {
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ey[i][j][k+1]-ey[i][j][k] - ra_y*(ez[i][j+1][k]-ez[i][j][k]) );
+                        curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxh[ixh][j][k] = ihxh[i][j][k] + curl_e;
                         hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
                     }
@@ -410,7 +408,7 @@ void main()
                 {
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k]) ;
+                        curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         ihyl[i][j][k] = ihyl[i][j][k] + curl_e;
                         hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk2[j] * .5 * (curl_e + fj1[i] * ihyl[i][j][k]);
                     }
@@ -423,7 +421,7 @@ void main()
                 {
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k] );
+                        curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk3[j] * .5 * curl_e;
                     }
                 }
@@ -435,7 +433,7 @@ void main()
                     jyh = j - jb - 1;
                     for (k = 0; k < KE - 1; k++)
                     {
-                        curl_e = (ra_x*(ez[i+1][j][k]-ez[i][j][k])-ex[i][j][k+1]+ex[i][j][k] );
+                        curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         ihyh[i][jyh][k] = ihyh[i][jyh][k] + curl_e;
                         hy[i][j][k] = fi3[j] * fk3[k] * hy[i][j][k] + fi2[j] * fk2[j] * .5 * (curl_e + fj1[i] * ihyl[i][j][k]);
                     }
@@ -479,22 +477,20 @@ void main()
                     }
                 }
             }
-
         }
-            /* end of the main FDTD LOOP */
-            /* write the E field out to file "Ez" */
-            fp = fopen("Ez", "w");
-            for (j = 0; j < JE; j++)
+        /* end of the main FDTD LOOP */
+        /* write the E field out to file "Ez" */
+        fp = fopen("Ez", "w");
+        for (j = 0; j < JE; j++)
+        {
+            for (i = 0; i < IE; i++)
             {
-                for (i = 0; i < IE; i++)
-                {
-                    fprintf(fp, "%9.6f", ez[i][j][ktop]);
-                }
-                fprintf(fp, "\n");
+                fprintf(fp, "%9.6f", ez[i][j][ktop]);
             }
-            fclose(fp);
-            printf ("t=%4.0f\n",T);
-        
+            fprintf(fp, "\n");
+        }
+        fclose(fp);
+        printf("T=%4.0f\n", T);
     }
     fclose(fpt);
 }
