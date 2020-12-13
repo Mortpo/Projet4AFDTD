@@ -58,9 +58,9 @@ void main()
 
     //p 123
 
-    ic = IE / 2;
-    jc = JE / 2;
-    kc = KE / 2;
+    ic = IE/2;
+    jc = JE/2;
+    kc = KE/2;
     ib = IE - ia - 1;
     jb = JE - ja - 1;
     kb = KE - ka - 1;
@@ -117,10 +117,10 @@ void main()
 
     istart = ia + 6;
     iend = istart + 6;
-    i_ref = istart + (iend - istart) / 2;
+    i_ref = istart + (iend - istart)/2;
     printf("istart : %d  iend : %d  i_ref : %d\n", istart, iend, i_ref);
 
-    half_wv = (iend - istart) / 2.;
+    half_wv = (iend - istart)/2.;
     printf("half_wv = %5.2f\n", half_wv);
 
     for (i = istart; i <= iend; i++)
@@ -242,7 +242,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][j][k] = idyl[i][j][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
                     }
                 }
             }
@@ -254,7 +254,7 @@ void main()
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gj2[i] * gk2[k] * .5 * curl_h;
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * curl_h;
                     }
                 }
             }
@@ -267,7 +267,7 @@ void main()
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
-                        idyl[i][jyh][k] = idyl[i][jyh][k] + curl_h;
+                        idyh[i][jyh][k] = idyh[i][jyh][k] + curl_h;
                         dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
                     }
                 }
@@ -363,7 +363,7 @@ void main()
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxl[i][j][k] = ihxl[i][j][k] + curl_e;
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxl[i][j][k]);
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * (curl_e + fi1[i] * ihxl[i][j][k]);
                     }
                 }
             }
@@ -374,7 +374,7 @@ void main()
                     for (k = 0; k < KE - 1; k++)
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * curl_e;
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * curl_e;
                     }
                 }
             }
@@ -387,7 +387,7 @@ void main()
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxh[ixh][j][k] = ihxh[i][j][k] + curl_e;
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[j] * .5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
                     }
                 }
             }
@@ -434,7 +434,7 @@ void main()
                     {
                         curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         ihyh[i][jyh][k] = ihyh[i][jyh][k] + curl_e;
-                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * .5 * (curl_e + fj1[j] * ihyl[i][jyh][k]);
+                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * .5 * (curl_e + fj1[j] * ihyh[i][jyh][k]);
                     }
                 }
             }
