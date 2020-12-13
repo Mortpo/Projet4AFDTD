@@ -58,20 +58,20 @@ void main()
 
     //p 123
 
-    ic = IE/2;
-    jc = JE/2;
-    kc = KE/2;
-    ib = IE - ia - 1;
-    jb = JE - ja - 1;
-    kb = KE - ka - 1;
+    ic = IE/2; //31
+    jc = JE/2; //60
+    kc = KE/2; //7
+    ib = IE - ia - 1; //47
+    jb = JE - ja - 1; //104
+    kb = KE - ka - 1; //6
 
     //definition de distances
-    i_patch_st = ia + 5;
-    i_patch_end = i_patch_st + 31;
-    j_patch_end = jb - 5;
-    j_patch_st = j_patch_end - 39;
-    j_ref = j_patch_st - 30;
-    k_ref = ktop - 1;
+    i_patch_st = ia + 5; //19
+    i_patch_end = i_patch_st + 31; //50
+    j_patch_end = jb - 5; //99
+    j_patch_st = j_patch_end - 39; //60
+    j_ref = j_patch_st - 30; //30
+    k_ref = ktop - 1; //1
 
     pi = 3.14159;
     epsz = 8.8e-12;
@@ -115,9 +115,9 @@ void main()
         }
     }
 
-    istart = ia + 6;
-    iend = istart + 6;
-    i_ref = istart + (iend - istart)/2;
+    istart = ia + 6; //20
+    iend = istart + 6; //26
+    i_ref = istart + (iend - istart)/2; // 20 + (26 -20)/2 =23
     printf("istart : %d  iend : %d  i_ref : %d\n", istart, iend, i_ref);
 
     half_wv = (iend - istart)/2.;
@@ -342,7 +342,7 @@ void main()
 
             //Ecriture des données temporelles dans le port d'entré
 
-            fprintf(fpt, "%8.4f \n", ez[i_ref][j_ref][k_ref]);
+            fprintf(fpt, "%8.4f \n", ez[i_ref][j_ref][k_ref]); // 23 30 1
 
             //Calcul du champ incident
 
@@ -484,7 +484,7 @@ void main()
         {
             for (i = 0; i < IE; i++)
             {
-                fprintf(fp, "%9.6f", ez[i][j][ktop]);
+                fprintf(fp, "%9.6f", ez[i][j][ktop]); // i j 2
             }
             fprintf(fp, "\n");
         }
