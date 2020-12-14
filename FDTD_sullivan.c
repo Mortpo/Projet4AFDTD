@@ -96,9 +96,9 @@ void main()
         {
             for (k = 0; k <= ktop; k++)
             {
-                gax[i][j][k] = 1. / eps_sub;
-                gay[i][j][k] = 1. / eps_sub;
-                gaz[i][j][k] = 1. / eps_sub;
+                gax[i][j][k] = 1.0 / eps_sub;
+                gay[i][j][k] = 1.0 / eps_sub;
+                gaz[i][j][k] = 1.0 / eps_sub;
             }
         }
     }
@@ -183,11 +183,11 @@ void main()
             //calcul du buffer incident
             for (j = 1; j < JE; j++)
             {
-                ez_inc[j] = gj3[j] * ez_inc[j] + gj2[j] * (.5 * ra_y / eps_sub) * (hx_inc[j - 1] - hx_inc[j]);
+                ez_inc[j] = gj3[j] * ez_inc[j] + gj2[j] * (0.5 * ra_y / eps_sub) * (hx_inc[j - 1] - hx_inc[j]);
             }
 
             //Source
-            pulse = exp(-.5 * (pow((t0 - T) / spread, 2.0)));
+            pulse = exp(-0.5 * (pow((t0 - T) / spread, 2.0)));
             ez_inc[ja - 2] = pulse;
             printf("T : %4.0f  Pulse : %6.2e \n", T, pulse);
 
@@ -201,7 +201,7 @@ void main()
                     {
                         curl_h = (ra_y * (hz[i][j][k] - hz[i][j - 1][k]) - hy[i][j][k] + hy[i][j][k - 1]);
                         idxl[i][j][k] = idxl[i][j][k] + curl_h;
-                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * .5 * (curl_h + gi1[i] * idxl[i][j][k]);
+                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * 0.5 * (curl_h + gi1[i] * idxl[i][j][k]);
                     }
                 }
             }
@@ -213,7 +213,7 @@ void main()
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (ra_y * (hz[i][j][k] - hz[i][j - 1][k]) - hy[i][j][k] + hy[i][j][k - 1]);
-                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * .5 * curl_h;
+                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * 0.5 * curl_h;
                     }
                 }
             }
@@ -227,7 +227,7 @@ void main()
                     {
                         curl_h = (ra_y * (hz[i][j][k] - hz[i][j - 1][k]) - hy[i][j][k] + hy[i][j][k - 1]);
                         idxh[ixh][j][k] = idxh[ixh][j][k] + curl_h;
-                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * .5 * (curl_h + gi1[i] * idxh[ixh][j][k]);
+                        dx[i][j][k] = gj3[j] * gk3[k] * dx[i][j][k] + gj2[j] * gk2[k] * 0.5 * (curl_h + gi1[i] * idxh[ixh][j][k]);
                     }
                 }
             }
@@ -242,7 +242,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyl[i][j][k] = idyl[i][j][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyl[i][j][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * 0.5 * (curl_h + gj1[j] * idyl[i][j][k]);
                     }
                 }
             }
@@ -254,7 +254,7 @@ void main()
                     for (k = 1; k < KE; k++)
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * curl_h;
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * 0.5 * curl_h;
                     }
                 }
             }
@@ -268,7 +268,7 @@ void main()
                     {
                         curl_h = (hx[i][j][k] - hx[i][j][k - 1] - ra_x * (hz[i][j][k] - hz[i - 1][j][k]));
                         idyh[i][jyh][k] = idyh[i][jyh][k] + curl_h;
-                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * .5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
+                        dy[i][j][k] = gi3[i] * gk3[k] * dy[i][j][k] + gi2[i] * gk2[k] * 0.5 * (curl_h + gj1[j] * idyh[i][jyh][k]);
                     }
                 }
             }
@@ -283,7 +283,7 @@ void main()
                     {
                         curl_h = (ra_x * (hy[i][j][k] - hy[i - 1][j][k]) - ra_y * (hx[i][j][k] - hx[i][j - 1][k]));
                         idzl[i][j][k] = idzl[i][j][k] + curl_h;
-                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gk1[k] * idzl[i][j][k]);
+                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * 0.5 * (curl_h + gk1[k] * idzl[i][j][k]);
                     }
                 }
             }
@@ -295,7 +295,7 @@ void main()
                     for (k = ka; k <= kb; k++)
                     {
                         curl_h = (ra_x * (hy[i][j][k] - hy[i - 1][j][k]) - ra_y * (hx[i][j][k] - hx[i][j - 1][k]));
-                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * curl_h;
+                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * 0.5 * curl_h;
                     }
                 }
             }
@@ -309,7 +309,7 @@ void main()
                         kzh = k - kb - 1;
                         curl_h = (ra_x * (hy[i][j][k] - hy[i - 1][j][k]) - ra_y * (hx[i][j][k] - hx[i][j - 1][k]));
                         idzh[i][j][kzh] = idzh[i][j][kzh] + curl_h;
-                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * .5 * (curl_h + gk1[k] * idzl[i][j][kzh]);
+                        dz[i][j][k] = gi3[i] * gj3[j] * dz[i][j][k] + gi2[i] * gj2[j] * 0.5 * (curl_h + gk1[k] * idzl[i][j][kzh]);
                     }
                 }
             }
@@ -320,7 +320,7 @@ void main()
             {
                 for (k = 0; k <= ktop; k++)
                 {
-                    dz[i][ja][k] = dz[i][ja][k] + (.5 / eps_sub) * shape[i][k] * hx_inc[ja - 1];
+                    dz[i][ja][k] = dz[i][ja][k] + (0.5 / eps_sub) * shape[i][k] * hx_inc[ja - 1];
                 }
             }
 
@@ -348,7 +348,7 @@ void main()
 
             for (j = 0; j < JE - 1; j++)
             {
-                hx_inc[j] = fj3[j] * hx_inc[j] + .5 * fj2[j] * (ez_inc[j] - ez_inc[j + 1]);
+                hx_inc[j] = fj3[j] * hx_inc[j] + 0.5 * fj2[j] * (ez_inc[j] - ez_inc[j + 1]);
             }
 
             //Calcul de champ Hx (fin page 139)
@@ -363,7 +363,7 @@ void main()
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxl[i][j][k] = ihxl[i][j][k] + curl_e;
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * (curl_e + fi1[i] * ihxl[i][j][k]);
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * 0.5 * (curl_e + fi1[i] * ihxl[i][j][k]);
                     }
                 }
             }
@@ -374,7 +374,7 @@ void main()
                     for (k = 0; k < KE - 1; k++)
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * curl_e;
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * 0.5 * curl_e;
                     }
                 }
             }
@@ -387,7 +387,7 @@ void main()
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
                         ihxh[ixh][j][k] = ihxh[i][j][k] + curl_e;
-                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * .5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
+                        hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * 0.5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
                     }
                 }
             }
@@ -397,7 +397,7 @@ void main()
             {
                 for (k = 0; k <= ktop; k++)
                 {
-                    hx[i][ja - 1][k] = hx[i][ja - 1][k] + (.5 / eps_sub) * shape[i][k] * ez_inc[ja];
+                    hx[i][ja - 1][k] = hx[i][ja - 1][k] + (0.5 / eps_sub) * shape[i][k] * ez_inc[ja];
                 }
             }
             /* claclulated  Hy filed */
@@ -409,7 +409,7 @@ void main()
                     {
                         curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         ihyl[i][j][k] = ihyl[i][j][k] + curl_e;
-                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * .5 * (curl_e + fj1[j] * ihyl[i][j][k]);
+                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * 0.5 * (curl_e + fj1[j] * ihyl[i][j][k]);
                     }
                 }
             }
@@ -421,7 +421,7 @@ void main()
                     for (k = 0; k < KE - 1; k++)
                     {
                         curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
-                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk3[k] * .5 * curl_e;
+                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk3[k] * 0.5 * curl_e;
                     }
                 }
             }
@@ -434,7 +434,7 @@ void main()
                     {
                         curl_e = (ra_x * (ez[i + 1][j][k] - ez[i][j][k]) - ex[i][j][k + 1] + ex[i][j][k]);
                         ihyh[i][jyh][k] = ihyh[i][jyh][k] + curl_e;
-                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * .5 * (curl_e + fj1[j] * ihyh[i][jyh][k]);
+                        hy[i][j][k] = fi3[i] * fk3[k] * hy[i][j][k] + fi2[i] * fk2[k] * 0.5 * (curl_e + fj1[j] * ihyh[i][jyh][k]);
                     }
                 }
             }
@@ -447,7 +447,7 @@ void main()
                     {
                         curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j][k] - ey[i][j][k]));
                         ihzl[i][j][k] = ihzl[i][j][k] + curl_e;
-                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * .5 * (curl_e + fk1[k] * ihzl[i][j][k]);
+                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * 0.5 * (curl_e + fk1[k] * ihzl[i][j][k]);
                     }
                 }
             }
@@ -458,7 +458,7 @@ void main()
                     for (k = ka; k <= kb; k++)
                     {
                         curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j][k] - ey[i][j][k]));
-                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * .5 * curl_e;
+                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * 0.5 * curl_e;
                     }
                 }
             }
@@ -472,7 +472,7 @@ void main()
                         kzh = k - kb - 1;
                         curl_e = (ra_y * (ex[i][j + 1][k] - ex[i][j][k]) - ra_x * (ey[i + 1][j][k] - ey[i][j][k]));
                         ihzh[i][j][kzh] = ihzh[i][j][kzh] + curl_e;
-                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * .5 * (curl_e + fk1[k] * ihzh[i][j][kzh]);
+                        hz[i][j][k] = fi3[i] * fj3[j] * hz[i][j][k] + fi2[i] * fj2[j] * 0.5 * (curl_e + fk1[k] * ihzh[i][j][kzh]);
                     }
                 }
             }
