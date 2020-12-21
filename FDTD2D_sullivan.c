@@ -22,7 +22,7 @@ void main()
     FILE *fp, *fopen();
 
     ic = IE / 2 - 5;
-    jc = JE / -5;
+    jc = JE /2  -5;
     ddx = 0.01;     //taille des cellules
     dt = ddx / 6e8; //pas de temps
     epsz = 8.8e-12;
@@ -208,13 +208,24 @@ void main()
         }
         //FIN DE LA BOUCLE PRINCIPALE
 
+        for ( j= 1; j < JE; j++)
+        {
+            printf(" j = %2d",j);
+            for ( i = 1; i <= IE; i++)
+            {
+                printf(" ez =  %4.1f",ez[i][j]);
+            }
+            printf(" \n");
+        }
+        
+
         //ecriture de EZ
-        fp=fopen("Data2D/Ez","w");
+        fp=fopen("Data2D/Ez2D","w");
         for (j = 0; j < JE; j++)
         {
             for ( i = 0; i < IE; i++)
             {
-                fprintf(fp,"6.3f",ez[i][j] );
+                fprintf(fp,"%6.3f",ez[i][j] );
             }
             fprintf(fp,"\n");
         }
