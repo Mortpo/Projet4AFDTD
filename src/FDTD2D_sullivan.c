@@ -211,7 +211,7 @@ void main()
         }
         //FIN DE LA BOUCLE PRINCIPALE
 
-        for ( j= 1; j < JE; j++)
+        /*for ( j= 1; j < JE; j++) //start à 1 ?? Pas utile on à le fichier ez
         {
             printf(" j = %2d",j);
             for ( i = 1; i <= IE; i++)
@@ -219,7 +219,7 @@ void main()
                 printf(" ez = %4.1f",ez[i][j]);
             }
             printf(" \n");
-        }
+        }*/
         
 
         //ecriture de EZ
