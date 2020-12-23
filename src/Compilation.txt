@@ -1,0 +1,1 @@
+gcc -Wall -o ../release/main2D FDTD2D_sullivan.c -lm
