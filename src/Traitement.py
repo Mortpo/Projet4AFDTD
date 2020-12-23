@@ -16,18 +16,25 @@ with open(chemin, newline='') as csvdata:
         for i in range(60):
             data[num][i]=float(row[i])
         num+=1
-#print(data)
+
+
+
+plt.imshow(data)
+plt.show()
 
 #donnees
-x = np.arange(len(data))
-y = np.arange(len(data))
-x,y = X, Y = np.meshgrid(x, y)
-z = data
+tailleX, tailleY = data.shape
+
+x = np.arange(tailleX)
+y = np.arange(tailleY)
+X,Y= np.meshgrid(x,y)
+Z = data
 #figure
 fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.plot_surface(x, y, z, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+ax = fig.gca(projection='3d')
+ax.plot_surface(X, Y, Z, linewidth=0,rstride=1,cstride=1 ,cmap=cm.seismic, antialiased=True)
+
 #axe
 ax.set_zlim(-0.5, 0.5)
-#afficahge
+#affichage
 plt.show()

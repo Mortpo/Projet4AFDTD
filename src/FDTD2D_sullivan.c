@@ -124,8 +124,10 @@ void main()
         printf("   %5.2f   %5.2f   %5.2f  \n", fj1[i], fj2[i], fj3[i]);
     }
 
-    t0 = 40.0;
-    spread = 15.0;
+    /*t0 = 40.0; //sinus
+    spread = 15.0;*/
+    t0 = 20.0; //exp
+    spread = 6.0;
     T = 0;
     nsteps = 1;
 
@@ -153,7 +155,8 @@ void main()
 
             //source sinusoidal
 
-            pulse = sin(2 * pi * 1500 * 1e6 * dt * T); //;?
+            //pulse = sin(2 * pi * 1500 * 1e6 * dt * T); //;?
+            pulse = exp(-0.5 * (pow((t0 - T) / spread, 2.0)));
             dz[ic][jc] = pulse;                        // point ou l'impulsion est envoyé
 
             //calcul de EZ
