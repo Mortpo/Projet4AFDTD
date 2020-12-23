@@ -213,7 +213,7 @@ void main()
             printf(" j = %2d",j);
             for ( i = 1; i <= IE; i++)
             {
-                printf(" ez =  %4.1f",ez[i][j]);
+                printf(" ez = %4.1f",ez[i][j]);
             }
             printf(" \n");
         }
@@ -225,9 +225,9 @@ void main()
         {
             for ( i = 0; i < IE; i++)
             {
-                fprintf(fp,"%6.3f",ez[i][j] );
+                fprintf(fp,"%.3f ",ez[i][j]);
             }
-            fprintf(fp,"\n");
+            fprintf(fp," \n");
         }
         fclose(fp);
         printf("T= %6.0f \n",T);

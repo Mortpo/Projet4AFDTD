@@ -165,7 +165,7 @@ void main()
     T = 0;
     nsteps = 1;
 
-    fpt = fopen("Time", "w");
+    fpt = fopen("../Data3D/Timeplane", "w");
 
     while (nsteps > 0)
     {
@@ -479,7 +479,7 @@ void main()
         }
         /* end of the main FDTD LOOP */
         /* write the E field out to file "Ez" */
-        fp = fopen("Ez", "w");
+        fp = fopen("../Data3D/Ezplane", "w");
         for (j = 0; j < JE; j++)
         {
             for (i = 0; i < IE; i++)
