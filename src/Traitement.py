@@ -6,7 +6,7 @@ from matplotlib import cm
 
 
 print('Chemin du fichier')
-chemin = "D:/ESIREM/4A/Python-microonde/Ccode/Projet4AFDTD/Data2D/Ez2D1point"
+chemin = "D:/ESIREM/4A/Python-microonde/Ccode/Projet4AFDTD/Data2D/Ez2D1pointpy"
 
 data = np.zeros((60,60))
 num=0

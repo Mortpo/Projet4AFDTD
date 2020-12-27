@@ -89,7 +89,7 @@ void main()
         fi3[IE - 2 - i] = (1.0 - xn) / (1.0 + xn);
     }
 
-    for (j = 0; j < npml; j++)
+    for (j = 0; j <= npml; j++)
     {
         xnum = npml - j;
         xd = npml;
