@@ -18,7 +18,7 @@ with open(chemin, newline='') as csvdata:
         num+=1
 
 
-
+print(data.shape)
 plt.imshow(data)
 plt.show()
 
