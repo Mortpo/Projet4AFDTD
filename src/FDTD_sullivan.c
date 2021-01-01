@@ -75,7 +75,7 @@ void main()
 
     pi = 3.14159;
     epsz = 8.8e-12;
-    muz = 4 * pi * 1.e-7;
+    muz = 4 * pi * 1.0e-7;
     ddz = .265e-3; //taille des cellules
     ra_y = .6625;
     ra_x = .6812;
@@ -96,9 +96,9 @@ void main()
         {
             for (k = 0; k <= ktop; k++)
             {
-                gax[i][j][k] = 1.0 / eps_sub;
-                gay[i][j][k] = 1.0 / eps_sub;
-                gaz[i][j][k] = 1.0 / eps_sub;
+                gax[i][j][k] = (1.0 / eps_sub);
+                gay[i][j][k] = (1.0 / eps_sub);
+                gaz[i][j][k] = (1.0 / eps_sub);
             }
         }
     }
@@ -165,7 +165,7 @@ void main()
     T = 0;
     nsteps = 1;
 
-    fpt = fopen("../Data3D/Timeplane", "w");
+    fpt = fopen("../Data3D/CTimeplane", "w");
 
     while (nsteps > 0)
     {
@@ -378,7 +378,7 @@ void main()
                     }
                 }
             }
-            for (i = ib + 1; i < IE; i++)
+            for (i = ib + 1; i < IE; i++) //PB sur k
             {
                 ixh = i - ib - 1;
                 for (j = 0; j < JE - 1; j++)
@@ -386,7 +386,7 @@ void main()
                     for (k = 0; k < KE - 1; k++)
                     {
                         curl_e = (ey[i][j][k + 1] - ey[i][j][k] - ra_y * (ez[i][j + 1][k] - ez[i][j][k]));
-                        ihxh[ixh][j][k] = ihxh[i][j][k] + curl_e;
+                        ihxh[ixh][j][k] = ihxh[ixh][j][k] + curl_e;
                         hx[i][j][k] = fj3[j] * fk3[k] * hx[i][j][k] + fj2[j] * fk2[k] * 0.5 * (curl_e + fi1[i] * ihxh[ixh][j][k]);
                     }
                 }
@@ -400,7 +400,7 @@ void main()
                     hx[i][ja - 1][k] = hx[i][ja - 1][k] + (0.5 / eps_sub) * shape[i][k] * ez_inc[ja];
                 }
             }
-            /* claclulated  Hy filed */
+            /* calculate  Hy filed */
             for (i = 0; i < IE - 1; i++)
             {
                 for (j = 0; j < ja; j++)
@@ -438,7 +438,7 @@ void main()
                     }
                 }
             }
-            /* calculatte the Hz fieled */
+            /* calculate the Hz fieled */
             for (i = 0; i < IE - 1; i++)
             {
                 for (j = 0; j < JE - 1; j++)
@@ -479,7 +479,7 @@ void main()
         }
         /* end of the main FDTD LOOP */
         /* write the E field out to file "Ez" */
-        fp = fopen("../Data3D/Ezplane", "w");
+        fp = fopen("../Data3D/CEzplane", "w");
         for (j = 0; j < JE; j++)
         {
             for (i = 0; i < IE; i++)
