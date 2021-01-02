@@ -1,3 +1,3 @@
 #!/bin/sh
-gcc -Wall -o ../release/main3D ../src/FDTD_sullivan.c -lm
+gcc -Wall -o ../release/main3D ../src/FDTD3D_sullivan.c -lm
 ./../release/main3D

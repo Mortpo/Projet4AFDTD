@@ -85,6 +85,92 @@ void main()
 
     // INITIALIZATION DES PARAMETRES, CALCUL DES PARAMETRES PML
 
+        for (i = 0 ; i<IE;i++){
+        gi1[i]=0.0;
+        fi1[i]=0.0;
+        gi2[i]=1.0;
+        fi2[i]=1.0;
+        gi3[i]=1.0;
+        fi3[i]=1.0;}
+
+    for (j = 0 ; j<JE;j++){
+        gj1[j]=0.0;
+        fj1[j]=0.0;
+        gj2[j]=1.0;
+        fj2[j]=1.0;
+        gj3[j]=1.0;
+        fj3[j]=1.0;}
+    
+    for (k = 0 ; k<KE;k++){
+        gk1[k]=0.0;
+        fk1[k]=0.0;
+        gk2[k]=1.0;
+        fk2[k]=1.0;
+        gk3[k]=1.0;
+        fk3[k]=1.0;}
+    
+    printf("Number of PML cells -->");
+    scanf("%f",&npml);
+    printf("%f \n",npml);
+    n_pml=npml;
+
+    for (i = 0 ; i<n_pml;i++){
+        xxn=(npml-i)/npml;
+        xn = 0.33*pow(xxn,3);
+        printf("%d xn = %8.4f  xn = %8.4f",i,xxn,xn);
+        fi1[i]= xn;
+        fi1[IE-i-1]=xn;
+        gi2[i]= 1.0/(1.0+xn);
+        gi2[IE-i-1] = 1.0/(1.0+xn);
+        gi3[i]=(1.0-xn)/(1.0+xn);
+        gi3[IE-i-1] = (1.0-xn)/(1.0+xn);
+        xxn=(npml-i-0.5)/npml;
+        xn = 0.33*pow(xxn,3.0);
+        gi1[i]=xn;
+        gi1[IE-i-2]=xn;
+        fi2[i]=1.0/(1.0+xn);
+        fi2[IE-i-2]=1.0/(1.0+xn);
+        fi3[i]=(1.0-xn)/(1.0+xn);
+        fi3[IE-i-2]=(1.0-xn)/(1.0+xn);}
+
+    for (j = 0 ; j<n_pml;j++){
+        xxn=(npml-j)/npml;
+        xn = 0.33*pow(xxn,3);
+        fj1[j]= xn;
+        fj1[JE-j-1]=xn;
+        gj2[j]= 1.0/(1.0+xn);
+        gj2[JE-j-1] = 1.0/(1.0+xn);
+        gj3[j]=(1.0-xn)/(1.0+xn);
+        gj3[JE-j-1] = (1.0-xn)/(1.0+xn);
+        xxn=(npml-j-0.5)/npml;
+        xn = 0.33*pow(xxn,3.0);
+        gj1[j]=xn;
+        gj1[JE-j-2]=xn;
+        fj2[j]=1.0/(1.0+xn);
+        fj2[JE-j-2]=1.0/(1.0+xn);
+        fj3[j]=(1.0-xn)/(1.0+xn);
+        fj3[JE-j-2]=(1.0-xn)/(1.0+xn);}
+
+        
+    for  (k = 0 ; k<n_pml;k++){
+        xxn=(npml-k)/npml;
+        xn = 0.33*pow(xxn,3);
+        fk1[k]= xn;
+        fk1[KE-k-1]=xn;
+        gk2[k]= 1.0/(1.0+xn);
+        gk2[KE-k-1] = 1.0/(1.0+xn);
+        gk3[k]=(1.0-xn)/(1.0+xn);
+        gk3[KE-k-1] = (1.0-xn)/(1.0+xn);
+        xxn=(npml-k-0.5)/npml;
+        xn = 0.33*pow(xxn,3.0);
+        gk1[k]=xn;
+        gk1[KE-k-2]=xn;
+        fk2[k]=1.0/(1.0+xn);
+        fk2[KE-k-2]=1.0/(1.0+xn);
+        fk3[k]=(1.0-xn)/(1.0+xn);
+        fk3[KE-k-2]=(1.0-xn)/(1.0+xn);}
+        
+
     //  Constante Dielectric du substrat
 
     eps_sub = 2.2;
@@ -484,7 +570,7 @@ void main()
         {
             for (i = 0; i < IE; i++)
             {
-                fprintf(fp, "%9.6f", ez[i][j][ktop]); // i j 2
+                fprintf(fp, "%.3f ", ez[i][j][ktop]); // i j 2
             }
             fprintf(fp, "\n");
         }
