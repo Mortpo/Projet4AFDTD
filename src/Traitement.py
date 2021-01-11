@@ -6,14 +6,14 @@ from matplotlib import cm
 
 
 print('Chemin du fichier')
-chemin = "D:/ESIREM/4A/Python-microonde/Ccode/Projet4AFDTD/Data3D/CEzplane"
-
-data = np.zeros((120,62))
+chemin = "D:/ESIREM/4A/Python-microonde/Ccode/Projet4AFDTD/Data2D/Ez2D1point"
+data = np.zeros((60,60))
+#data = np.zeros((120,62))
 num=0
 with open(chemin, newline='') as csvdata:
     datareader = csv.reader(csvdata, delimiter=' ')
     for row in datareader:
-        for i in range(62):
+        for i in range(60):
             data[num][i]=float(row[i])
         num+=1
 
