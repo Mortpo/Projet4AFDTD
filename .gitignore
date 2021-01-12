@@ -1,1 +1,7 @@
 .vs
+.vscode
+.pytest_cache
+__pycache__
+__pycache__/
+Data2D
+Data3D
