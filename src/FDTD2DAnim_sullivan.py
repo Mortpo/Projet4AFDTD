@@ -91,13 +91,13 @@ def main():
         print('i= '+ str(j)+'  gj2= '+ str(gj2[j])+'  gj3= '+ str(gj3[j]))
         print('i= '+ str(j)+'  fj1= '+ str(fj1[j])+'  fj2= '+ str(fj2[j])+'  fj3= '+ str(fj3[j]))
 
-    """t0 = 40.0 #sinus
-    spread = 15.0"""
-    t0 = 20.0 #exp
-    spread = 6.0
+    t0 = 40.0 #sinus
+    spread = 15.
+    """t0 = 20.0 #exp
+    spread = 6.0"""
     T = 0
     nsteps = 1
-    fp = open("../Data2D/Ez2D1pointpy","w")
+    fp = open("../Data2D/Ez2D1pointpySin","w")
     while nsteps>0:
         
         print(" nsteps --> ")
@@ -118,10 +118,10 @@ def main():
                     dz[i][j] = gi3[i] * gj3[j] * dz[i][j] + gi2[i] * gj2[j] * 0.5 * (hy[i][j] - hy[i - 1][j] - hx[i][j] + hx[i][j - 1])
 
             #source Sinusoidal
-            #pulse = sin(2 * pi * 1500 * 1e6 * dt * T)
+            pulse = np.sin(2 * pi * 1500 * 1e6 * dt * T)
 
             #source Gaussienne
-            pulse = np.exp(-0.5 * (pow((t0 - T) / spread, 2.0)))
+            #pulse = np.exp(-0.5 * (pow((t0 - T) / spread, 2.0)))
 
             dz[ic][jc]=pulse
 
