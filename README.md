@@ -8,8 +8,10 @@ Simulation de patch 2D fonctionnel en python et C pour une source ponctuelle
 Résultats présentés sous forme d'animations / images
 
 #Résultats avec une impusion sinusoïdal
-![alt text](https://github.com/Mortpo/Projet4AFDTD/tree/main/Resultat/2D/Sin/2DPatch0To1503D22fps.gif?raw=true)
+
+![alt text](https://github.com/Mortpo/Projet4AFDTD/tree/main/Resultat/2D/Sin/2DPatch0To1503D22fps.gif)
+
 
 #Résultats avec une impusion gaussienne
 
-![alt text](https://github.com/Mortpo/Projet4AFDTD/tree/main/Resultat/2D/gauss/FDTD2D_Gauss.gif?raw=true)
+![alt text](https://github.com/Mortpo/Projet4AFDTD/tree/main/Resultat/2D/gauss/FDTD2D_Gauss.gif)
