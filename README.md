@@ -4,7 +4,7 @@ Pour cela nous utiliserons la methode FDTD présenté dans la publication D. M. 
 Nous utiliserons le language de programation Python.
 
 #Résultats actuels
-Simulation de patch 2D fonctionnel en python et C pour une source ponctuelle
+Simulation de patch 2D fonctionnel en python et C pour une source ponctuelle.<br />
 Résultats présentés sous forme d'animations / images
 
 #Résultats avec une impusion sinusoïdal
