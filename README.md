@@ -1,6 +1,6 @@
 # Projet4AFDTD
 L'objectif du projet et de simuler une onde électromagnétique dans une antenne patch pour la caractériser.
-Pour cela nous utiliserons la methode FDTD présenté dans la publication D. M. Sheen, S. M. Ali, M. D. Abouzahra, and J. A. Kong, Application of the three-dimensional finite-difference time-domain method to the analysis of planar microstrip circuits, IEEE Trans. Microwave Theory Tech., vol. MTT-43, Oct. 1995, pp. 2445-251
+Pour cela nous utiliserons la methode FDTD présenté dans la publication D. M. Sheen, S. M. Ali, M. D. Abouzahra, and J. A. Kong, Application of the three-dimensional finite-difference time-domain method to the analysis of planar microstrip circuits, IEEE Trans. Microwave Theory Tech., vol. MTT-43, Oct. 1995, pp. 2445-251.<br />
 Nous utiliserons le language de programation Python.
 
 #Résultats actuels
