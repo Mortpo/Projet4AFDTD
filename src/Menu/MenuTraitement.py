@@ -1,11 +1,13 @@
 import csv
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d import art3d
-from matplotlib import cm
-import matplotlib.animation as animation
-import ffmpeg
+from moviepy.editor import VideoClip
+import numpy as np
+import mayavi.mlab as mlab
+import  moviepy.editor as mpy
+import glob
+import os
+
+
 
 #Code pour faire le menu de traitement choisir l'image si c'est une annimation ou non
 #combine le code de traitement et annimation
@@ -23,25 +25,11 @@ def getImage(tailleX,tailleY,chemin):
     return img
 
 
-def generateFixedPicture(img):
-    plt.figure()
-    plt.imshow(img)
-    plt.show()
 
 def generateFixed3DSurface(img):
-    tailleX, tailleY = img.shape
-    x = range(tailleX)
-    y = range(tailleY)
-    X,Y= np.meshgrid(x,y)
-    Z = img
-
-    #figure
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    plt.ylim(-0.5, tailleY-0.5)
-    plt.xlim(-0.5, tailleX-0.5)
-    ax.plot_surface(X, Y, np.transpose(Z), rstride=1,cstride=1 ,cmap=cm.viridis, antialiased=True)
-    plt.show()
+    mlab.figure(bgcolor=(1,1,1))
+    mlab.surf(img,warp_scale='auto',colormap='viridis')
+    mlab.show()
 
 
 #Pour l'animation ou une image d'indice N
@@ -56,68 +44,48 @@ def getImageForAnimation(indice ,tailleX,tailleY, chemin):
             ligne = datareader.__next__()
             for i in np.arange(tailleY):
                 img[u][i]=float(ligne[i])
-    return np.transpose(img) 
+    return img
 
-def generate2DAnimation(start,end,Valmin,Valmax,tailleX,tailleY, chemin):
-    
-    fig = plt.figure()
-    if Valmax != Valmin:
-        norm = cm.colors.Normalize(vmin=Valmin,vmax=Valmax)
-    else:
-        norm = cm.colors.Normalize()
-
-    ims=[]
-    for i in range(start,end):
-        im = plt.imshow(getImageForAnimation(i ,tailleX,tailleY, chemin), animated=True, cmap=cm.magma,norm=norm ,aspect='auto')
-        ims.append([im])
-
-    plt.grid(True)
-    plt.title("Animation du champ Ez au cours du temps")
-    plt.xlabel("Position X")
-    plt.ylim(-0.5, tailleY-0.5)
-    plt.xlim(-0.5, tailleX-0.5)
-    plt.ylabel("Position Y")
-
-    anim = animation.ArtistAnimation(fig, ims, interval=5, blit=True,
-                                    repeat_delay=1000)
-    plt.show()
-    return anim
 
 def generate3DAnimation(start,end,Valmin,Valmax,tailleX,tailleY, chemin):
     
-    x = np.arange(tailleX)
-    y = np.arange(tailleY)
-    X,Y= np.meshgrid(x,y)
+    X, Y = np.meshgrid(tailleX,tailleY) 
+    fig = mlab.figure(size=(1920,1080))
+    img = np.zeros((60,60),dtype="float")
+    s = mlab.surf(img, warp_scale=25,vmin = Valmin, vmax = Valmax,colormap='viridis', figure = fig)
+    f = mlab.gcf()
+    f.scene._lift()
+    @mlab.animate(delay=20)
+    def anim():
+        for i in range(start,end):
+            s.scene.disable_render = True
+            img = getImageForAnimation(i,tailleX,tailleY, chemin)
+            s.mlab_source.scalars=img
+            mlab.savefig("D:/ESIREM/4A/Python-microonde/Projet4AFDTD/render/img"+str(i)+".png")
+            s.scene.disable_render = False
+            yield
 
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    if Valmax != Valmin:
-        norm = cm.colors.Normalize(vmin=Valmin,vmax=Valmax)
-        ax.set_zlim(Valmin,Valmax)
-    else:
-        norm = cm.colors.Normalize()
+    anim()
+    mlab.show()
+    imdir = 'D:/ESIREM/4A/Python-microonde/Projet4AFDTD/render/'
+    ext = ['png']  
 
-    ims=[]
-    for i in range(start,end):
-        data = getImageForAnimation(i ,tailleX,tailleY, chemin)
-        im = ax.plot_surface(X, Y, data,animated=True, linewidth=0,rstride=1,cstride=1 ,cmap=cm.magma,norm=norm, antialiased=True)
-        ims.append([im])
-
-    plt.grid(True)
-    plt.title("Animation du champ Ez au cours du temps")
-    plt.xlabel("Position X")
-    plt.ylim(-0.5, tailleY-0.5)
-    plt.xlim(tailleX-0.5,-0.5 )
-
-    plt.ylabel("Position Y")
-
-    anim = animation.ArtistAnimation(fig, ims, interval=5, blit=True,
-                                    repeat_delay=1000)
-    #plt.show()
-    return anim
+    files = []
+    [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
+    clip = mpy.ImageSequenceClip(sequence=files, fps=24)
+    clip.write_gif('2DSinusSansAxes.gif')
+    for filePath in files:
+        try:
+            os.remove(filePath)
+        except OSError:
+            print("Error while deleting file")
 
 
-def savePlot(anim):
+
+
+
+
+'''def savePlot(anim):
         print("Nom du fichier avec l'extension ? \nPour rappel le fichier source est " + str(chemin))
         nomfichier = input()
         print("Quel est le nombre de FPS désiré")
@@ -125,17 +93,14 @@ def savePlot(anim):
         print("sauvegarde")
         f = nomfichier
         FFwriter = animation.FFMpegWriter(fps=nbfps)
-        anim.save(f, writer=FFwriter)
+        anim.save(f, writer=FFwriter)'''
 
-def showAnimOrPicture():
+'''def showAnimOrPicture():
     plt.show()
+'''
 
-
-chemin = "D:/ESIREM/4A/Python-microonde/Ccode/Projet4AFDTD/Data3D/CEzplane"
-tailleX , tailleY = 120,62
-#image = getImageForAnimation(800,tailleX , tailleY,chemin)
-#generateFixedPicture(image)
+chemin = "D:/ESIREM/4A/Python-microonde/Projet4AFDTD/Data2D/Ez2D1pointpySin"
+tailleX , tailleY = 60,60
+#image = getImageForAnimation(0,tailleX , tailleY,chemin)
 #generateFixed3DSurface(image)
-ani = generate2DAnimation(400,800,-0.5,1,tailleX , tailleY,chemin)
-#ani = generate3DAnimation(0,150,-1,1,60,60,chemin)
-#savePlot(ani)
+generate3DAnimation(0,400,-0.2,0.2,60,60,chemin)
