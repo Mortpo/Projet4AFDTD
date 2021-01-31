@@ -1,69 +1,81 @@
-import MicroOnde1.Antenne
+import Antenne
 import numpy as np
-import MicroOnde1.Materiaux as Mat
-import MicroOnde1.Cellule as Cellule
+import Materiau as Mat
+import Cellule
+#numpy fft
 
 class DeviceInfo:
 
 
     def __init__(self,rawPatch:Antenne):
-        self.ra_x
-        self.ra_y
-        self.ra_z
+        self.cellSizeX = rawPatch.cellSizeX
+        self.cellSizeY = rawPatch.cellSizeY
+        self.cellSizeZ = rawPatch.cellSizeZ
+        self.typeUnite = rawPatch.typeUnite
+        self.ra_x = .6625
+        self.ra_y = .6812
         self.celerite = 3e8
         self.pi = np.pi
         #self.timeStep # = ddz/6e8?
-        self.nbPMLlayer
-        self.nbFreeSpaceLayer
-        self.timeStep
-        self.curl_h,self.curl_e
-        self.gi1,self.gi2,self.gi3
-        self.gj1,self.gj2,self.gj3
-        self.gk1,self.gk2,self.gk3
-        self.fi1,self.fi2,self.fi3
-        self.fj1,self.fj2,self.fj3
-        self.fk1,self.fk2,self.fk3
-        setPML(self.nbPMLlayer)
-        self.rawPatch = rawPatch
-        self.patchnopml = convertRawPatchToCell(rawPatch) # RAJOUTER TOUT PML ET FREE SPACE
+        self.nbPMLlayer = 8
+        self.nbFreeSpaceLayer = 8
+        self.timeStep = self.cellSizeZ/6e8
+        self.curl_h=0.0
+        self.curl_e=0.0
+        self.gi1,self.gi2,self.gi3 = [],[],[]
+        self.gj1,self.gj2,self.gj3 = [],[],[]
+        self.gk1,self.gk2,self.gk3 = [],[],[]
+        self.fi1,self.fi2,self.fi3 = [],[],[]
+        self.fj1,self.fj2,self.fj3 = [],[],[]
+        self.fk1,self.fk2,self.fk3 = [],[],[]
+        self.patch = self.convertRawPatchToCell(rawPatch)
+        self.setPML()
+
+
+    def initialise(self):
+        setPML()
+        print("Parametre deltaX,Y,Z et T ok = True Sinon False" + testCellSize(self.timeStep,self.rawPatch.cellSizeX,self.rawPatch.cellSizeY,self.rawPatch.cellSizeZ))
+        self.patch.convertRawPatchToCell(self.rawPatch)
 
 
 
-
-    def testCellSize(self,timeStep,cellSizeX,cellSizeY,cellSizeZ):
+    def testCellSize(self):
         valide = False
-        if timeStep <= (1/celerite) * np.sqrt((1/(cellSizeX*cellSizeX)) + (1/(cellSizeY*cellSizeY)) + (1/(cellSizeZ*cellSizeZ))):
+        celerite = 3e8
+        print(celerite)
+        if self.timeStep <= (1/celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))):
             valide = True
-            ratio=timeStep/((1/celerite) * np.sqrt((1/(cellSizeX*cellSizeX)) + (1/(cellSizeY*cellSizeY)) + (1/(cellSizeZ*cellSizeZ))))
+            ratio=self.timeStep/((1/celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))))
             if ratio<90 or ratio >=1:
-                print("Warning ration can be source of problem " + str(ratio))
+                print("Warning ratio can be source of problem " + str(ratio))
         return valide
 
-    def sourcePulse(self,t0,spread,T):
-        pulse = np.exp(-0.5 * (pow((t0 - T) / spread, 2.0)))
-        return pulse
 
-    
-    #pas d'air ni pml actuellement
-    def convertRawPatchToCell(self):
-        tailleX,tailleY,tailleZ = self.rawPatch.shape
-        patch = np.zeros(((self.rawPatch.shape)),dtype = Cellule)
-        nbMat = len(Mat.materiauxType)
+
+
+    def convertRawPatchToCell(self,rawPatch:Antenne):
+        tailleX,tailleY,tailleZ = rawPatch.patch.shape
+        patch = np.empty(((rawPatch.patch.shape)),dtype=object )
         for k in range(tailleZ):
             for i in range(tailleX):
                 for j in range(tailleY):
-
-                    for l in nbMat:
-                        if self.rawPatch[i][j][k] == Mat.materiauxType[l].patchValue:
-                            patch[i][j][k].gax = Mat.materiauxType[l].conductiviteX
-                            patch[i][j][k].gay = Mat.materiauxType[l].conductiviteY
-                            patch[i][j][k].gaz = Mat.materiauxType[l].conductiviteZ
+                    patch[i][j][k]=Cellule.Cellule(Mat.freeSpace)
+                    for l in range(len(Mat.MateriauType)):
+                        if rawPatch.patch[i][j][k] == Mat.MateriauType[l].patchValue:
+                            patch[i][j][k].gax = Mat.MateriauType[l].conductiviteX
+                            patch[i][j][k].gay = Mat.MateriauType[l].conductiviteY
+                            patch[i][j][k].gaz = Mat.MateriauType[l].conductiviteZ
+                            patch[i][j][k].materiau = Mat.MateriauType[l]
+        padding = self.nbFreeSpaceLayer
+        patch = np.pad(patch, ((padding,padding),(padding,padding),(padding,padding)), 'constant', constant_values=Cellule.Cellule(Mat.freeSpace))
+        padding = self.nbPMLlayer
+        patch = np.pad(patch, ((padding,padding),(padding,padding),(padding,padding)), 'constant', constant_values=Cellule.Cellule(Mat.PML))
         return patch
 
     def setPML(self):
         #Surement faux pas le bon patch il faut rajouter les couches pml
         #LES COUCHE DE PML MANGE LE PATCH
-        tailleX,tailleY,tailleZ = self.patchnopml.shape
+        tailleX,tailleY,tailleZ = self.patch.shape
 
         self.gi1 = np.zeros(tailleX,dtype=float)
         self.fi1 = np.zeros(tailleX,dtype=float)
@@ -89,55 +101,69 @@ class DeviceInfo:
         for i in range(self.nbPMLlayer):
             xxn = (self.nbPMLlayer-i)/(self.nbPMLlayer)
             xn = 0.33*pow(xxn,3.0)
-            fi1[i]=xn
-            fi1[tailleX-i-1]=xn
-            gi2[i] = 1.0/(1.0+xn)
-            gi2[tailleX-i-1] = 1.0/(1.0+xn)
-            gi3[i]=(1.0-xn)/(1.0+xn)
-            gi3[tailleX-i-1]=(1.0-xn)/(1.0+xn) 
+            self.fi1[i]=xn
+            self.fi1[tailleX-i-1]=xn
+            self.gi2[i] = 1.0/(1.0+xn)
+            self.gi2[tailleX-i-1] = 1.0/(1.0+xn)
+            self.gi3[i]=(1.0-xn)/(1.0+xn)
+            self.gi3[tailleX-i-1]=(1.0-xn)/(1.0+xn) 
             xxn=(self.nbPMLlayer-i-0.5)/self.nbPMLlayer
             xn=0.33*pow(xxn,3.0)
-            gi1[i]=xn
-            gi1[tailleX-i-2]=xn
-            fi2[i]=1.0/(1.0+xn)
-            fi2[tailleX-i-2] = 1.0/(1.0+xn)
-            fi3[i] = (1.0-xn)/(1.0+xn) 
-            fi3[tailleX-i-2] = (1.0-xn)/(1.0+xn)
+            self.gi1[i]=xn
+            self.gi1[tailleX-i-2]=xn
+            self.fi2[i]=1.0/(1.0+xn)
+            self.fi2[tailleX-i-2] = 1.0/(1.0+xn)
+            self.fi3[i] = (1.0-xn)/(1.0+xn) 
+            self.fi3[tailleX-i-2] = (1.0-xn)/(1.0+xn)
         
         
         for j in range(self.nbPMLlayer):
             xxn = (self.nbPMLlayer-j)/(self.nbPMLlayer)
             xn = 0.33*pow(xxn,3.0)
-            fj1[j]=xn
-            fj1[tailleY-j-1]=xn
-            gj2[j] = 1.0/(1.0+xn)
-            gj2[tailleY-j-1] = 1.0/(1.0+xn)
-            gj3[j]=(1.0-xn)/(1.0+xn)
-            gj3[tailleY-j-1]=(1.0-xn)/(1.0+xn) 
+            self.fj1[j]=xn
+            self.fj1[tailleY-j-1]=xn
+            self.gj2[j] = 1.0/(1.0+xn)
+            self.gj2[tailleY-j-1] = 1.0/(1.0+xn)
+            self.gj3[j]=(1.0-xn)/(1.0+xn)
+            self.gj3[tailleY-j-1]=(1.0-xn)/(1.0+xn) 
             xxn=(self.nbPMLlayer-j-0.5)/self.nbPMLlayer
             xn=0.33*pow(xxn,3.0)
-            gj1[j]=xn
-            gj1[tailleY-j-2]=xn
-            fj2[j]=1.0/(1.0+xn)
-            fj2[tailleY-j-2] = 1.0/(1.0+xn)
-            fj3[j] = (1.0-xn)/(1.0+xn) 
-            fj3[tailleY-j-2] = (1.0-xn)/(1.0+xn)
+            self.gj1[j]=xn
+            self.gj1[tailleY-j-2]=xn
+            self.fj2[j]=1.0/(1.0+xn)
+            self.fj2[tailleY-j-2] = 1.0/(1.0+xn)
+            self.fj3[j] = (1.0-xn)/(1.0+xn) 
+            self.fj3[tailleY-j-2] = (1.0-xn)/(1.0+xn)
 
         for k in range(self.nbPMLlayer):
             xxn = (self.nbPMLlayer-k)/(self.nbPMLlayer)
             xn = 0.33*pow(xxn,3.0)
-            fk1[k]=xn
-            fk1[tailleZ-k-1]=xn
-            gk2[k] = 1.0/(1.0+xn)
-            gk2[tailleZ-k-1] = 1.0/(1.0+xn)
-            gk3[k]=(1.0-xn)/(1.0+xn)
-            gk3[tailleZ-k-1]=(1.0-xn)/(1.0+xn) 
+            self.fk1[k]=xn
+            self.fk1[tailleZ-k-1]=xn
+            self.gk2[k] = 1.0/(1.0+xn)
+            self.gk2[tailleZ-k-1] = 1.0/(1.0+xn)
+            self.gk3[k]=(1.0-xn)/(1.0+xn)
+            self.gk3[tailleZ-k-1]=(1.0-xn)/(1.0+xn) 
             xxn=(self.nbPMLlayer-k-0.5)/self.nbPMLlayer
             xn=0.33*pow(xxn,3.0)
-            gk1[k]=xn
-            gk1[tailleZ-k-2]=xn
-            fk2[k]=1.0/(1.0+xn)
-            fk2[tailleZ-k-2] = 1.0/(1.0+xn)
-            fk3[k] = (1.0-xn)/(1.0+xn) 
-            fk3[tailleZ-k-2] = (1.0-xn)/(1.0+xn)
+            self.gk1[k]=xn
+            self.gk1[tailleZ-k-2]=xn
+            self.fk2[k]=1.0/(1.0+xn)
+            self.fk2[tailleZ-k-2] = 1.0/(1.0+xn)
+            self.fk3[k] = (1.0-xn)/(1.0+xn) 
+            self.fk3[tailleZ-k-2] = (1.0-xn)/(1.0+xn)
+
+    def printfile(self,nameOfTheFile):
+        dessusX,dessusY,profondeur = self.patch.shape
+        f = open(str(nameOfTheFile)+".txt","w")
+        print("File writen to "+ str(nameOfTheFile)+".txt")
+        f.write("Bottom\n")
+        for z in range(profondeur):
+            for x in range(dessusX):
+                for y in range(dessusY):
+                    f.write(str(self.patch[x][y][z].materiau.patchValue)+";")
+                f.write("\n")
+            #f.write("\n")
+
+        f.close()
 

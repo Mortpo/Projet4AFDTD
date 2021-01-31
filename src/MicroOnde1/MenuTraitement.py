@@ -6,6 +6,7 @@ import mayavi.mlab as mlab
 import  moviepy.editor as mpy
 import glob
 import os
+import pyvista as pv
 
 
 
@@ -13,18 +14,6 @@ import os
 #combine le code de traitement et annimation
 
 #Pour la premiere image du fichier
-def getImage(tailleX,tailleY,chemin):
-    img = np.zeros(((tailleX,tailleY)))
-    num=0
-    with open(chemin, newline='') as csvdata:
-        datareader = csv.reader(csvdata, delimiter=' ')
-        for row in datareader:
-            for i in range(tailleY):
-                img[num][i]=float(row[i])
-            num+=1
-    return img
-
-
 
 def generateFixed3DSurface(img):
     mlab.figure(bgcolor=(1,1,1))
@@ -91,22 +80,37 @@ def generate3DAnimation(start,end,Valmin,Valmax,tailleX,tailleY, chemin):
 
 
 
-'''def savePlot(anim):
-        print("Nom du fichier avec l'extension ? \nPour rappel le fichier source est " + str(chemin))
-        nomfichier = input()
-        print("Quel est le nombre de FPS désiré")
-        nbfps = input()
-        print("sauvegarde")
-        f = nomfichier
-        FFwriter = animation.FFMpegWriter(fps=nbfps)
-        anim.save(f, writer=FFwriter)'''
+def showPatch(chemin,tailleX,tailleY,tailleZ):
+    patch = np.zeros((tailleX,tailleY,tailleZ),dtype = int)
+    with open(chemin, newline='') as csvdata:
+        datareader = csv.reader(csvdata, delimiter=';')
+        k=0
+        j=0
+        
+        for ligne in datareader:
+            for i in range(tailleX):
+                patch[i][j][k]=int(ligne[i])
+            j=(j+1)%tailleY
+            if j == 0:
+                k= (k+1)
+           
+    #point_cloud = mlab.points3d(patch,opacity = 0.5,transparent=True,line_width=1.0,scale_factor=0.3,mask_points=20,mode='cube',scale_mode='scalar',vmin = 0,vmax = 4)
+    #mlab.show()
+    
+    p = pv.Plotter(window_size=(1080,720))
+    mesh = pv.UniformGrid()
+    mesh.dimensions=patch.shape
+    mesh.point_arrays["values"] = patch.flatten(order="F")
+    opacity = [1, 0.5, 0.1, 0.1]
+    p.add_volume(mesh, cmap="viridis",opacity=opacity,shade=False)
+    p.show()
+ 
 
-'''def showAnimOrPicture():
-    plt.show()
-'''
+
 
 chemin = "D:/ESIREM/4A/Python-microonde/Projet4AFDTD/Data2D/Ez2DpySin.data"
 tailleX , tailleY = 60,60
+showPatch("D:/ESIREM/4A/Python-microonde/Projet4AFDTD/Data2D/ShowPatch.txt",40+8+8+8+8,40+8+8+8+8,4+8+8+8+8)
 #image = getImageForAnimation(0,tailleX , tailleY,chemin)
 #generateFixed3DSurface(image)
-generate3DAnimation(0,400,-0.2,0.2,60,60,chemin)
+#generate3DAnimation(0,400,-0.2,0.2,60,60,chemin)
