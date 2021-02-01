@@ -16,9 +16,8 @@ class DeviceInfo:
         self.ra_y = .6812
         self.celerite = 3e8
         self.pi = np.pi
-        #self.timeStep # = ddz/6e8?
         self.nbPMLlayer = 8
-        self.nbFreeSpaceLayer = 8
+        self.nbFreeSpaceLayer = 4
         self.timeStep = self.cellSizeZ/6e8
         self.curl_h=0.0
         self.curl_e=0.0
@@ -30,6 +29,17 @@ class DeviceInfo:
         self.fk1,self.fk2,self.fk3 = [],[],[]
         self.patch = self.convertRawPatchToCell(rawPatch)
         self.setPML()
+        self.ia=self.nbPMLlayer+self.nbFreeSpaceLayer
+        self.ib=self.nbPMLlayer+self.nbFreeSpaceLayer+rawPatch.patch.shape[0]
+        self.ja=self.nbPMLlayer+self.nbFreeSpaceLayer
+        self.jb=self.nbPMLlayer+self.nbFreeSpaceLayer+rawPatch.patch.shape[1]
+        self.ka=self.nbPMLlayer+self.nbFreeSpaceLayer
+        self.kb=self.nbPMLlayer+self.nbFreeSpaceLayer+rawPatch.patch.shape[2]
+        self.hx_inc = np.zeros(self.patch.shape[1])
+        self.ez_inc = np.zeros(self.patch.shape[1])
+
+
+
 
 
     def initialise(self):
@@ -41,11 +51,9 @@ class DeviceInfo:
 
     def testCellSize(self):
         valide = False
-        celerite = 3e8
-        print(celerite)
-        if self.timeStep <= (1/celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))):
+        if self.timeStep <= (1/self.celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))):
             valide = True
-            ratio=self.timeStep/((1/celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))))
+            ratio=self.timeStep/((1/self.celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))))
             if ratio<90 or ratio >=1:
                 print("Warning ratio can be source of problem " + str(ratio))
         return valide

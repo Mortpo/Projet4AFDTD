@@ -8,7 +8,8 @@ class Materiau:
         self.patchValue=patchValue
 
 #def Materiau
-isolant = Materiau([1/2.2,1/2.2,1/2.2],[255,255,255],0)
+eps_sub=2.2
+isolant = Materiau([1/eps_sub,1/eps_sub,1/eps_sub],[255,255,255],0)
 patch = Materiau([0,0,1],[0,0,0],1)
 freeSpace= Materiau([1,1,1],[0,0,255],3) #Air/vide
 PML = Materiau([1,1,1],[255,0,0],4) #couche de PML ; QUID de la conductivité ? Surement conductivité de l'air on prend sur des cellules d'air ?

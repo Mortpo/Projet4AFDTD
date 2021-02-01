@@ -16,5 +16,3 @@ class Cellule:
         self.gay = materiau.conductiviteY
         self.gaz = materiau.conductiviteZ
         self.materiau = materiau
-
-cel = Cellule(Mat.freeSpace)
