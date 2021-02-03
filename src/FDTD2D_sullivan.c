@@ -124,12 +124,13 @@ void main()
         printf("   %5.2f   %5.2f   %5.2f  \n", fj1[i], fj2[i], fj3[i]);
     }
 
-    /*t0 = 40.0; //sinus
-    spread = 15.0;*/
-    t0 = 20.0; //exp
-    spread = 6.0;
+    t0 = 40.0; //sinus
+    spread = 15.0;
+    /*t0 = 20.0; //exp
+    spread = 6.0;*/
     T = 0;
     nsteps = 1;
+    fp=fopen("../Data2D/Ez2DSinC.data","w");
 
     while (nsteps > 0)
     {
@@ -155,8 +156,8 @@ void main()
 
             //source sinusoidal
 
-            //pulse = sin(2 * pi * 1500 * 1e6 * dt * T); //;?
-            pulse = exp(-0.5 * (pow((t0 - T) / spread, 2.0)));
+            pulse = sin(2 * pi * 1500 * 1e6 * dt * T); //;?
+            //pulse = exp(-0.5 * (pow((t0 - T) / spread, 2.0)));
             dz[ic][jc] = pulse;                        // point ou l'impulsion est envoyé
 
             //calcul de EZ
@@ -207,21 +208,22 @@ void main()
                 }
             }
 
+            //ecriture de EZ
+            
+            for (j = 0; j < JE; j++)
+            {
+                for ( i = 0; i < IE; i++)
+                {
+                    fprintf(fp,"%.3f ",ez[i][j]);
+                }
+                fprintf(fp," \n");
+            }
+
 
         }
         //FIN DE LA BOUCLE PRINCIPALE
 
-        /*for ( j= 1; j < JE; j++) //start à 1 ?? Pas utile on à le fichier ez
-        {
-            printf(" j = %2d",j);
-            for ( i = 1; i <= IE; i++)
-            {
-                printf(" ez = %4.1f",ez[i][j]);
-            }
-            printf(" \n");
-        }*/
-        
-
+        /*
         //ecriture de EZ
         fp=fopen("../Data2D/Ez2D1point","w");
         for (j = 0; j < JE; j++)
@@ -232,6 +234,7 @@ void main()
             }
             fprintf(fp," \n");
         }
+        */
         fclose(fp);
         printf("T= %6.0f \n",T);
 
