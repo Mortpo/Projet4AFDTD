@@ -42,8 +42,7 @@ class Antenne:
         for z in range(profondeur):
             for x in range(dessusX):
                 for y in range(dessusY):
-                    f.write(str(self.patch[x][y][z]))
+                    f.write(str(self.patch[x][y][z])+";")
                 f.write("\n")
-            f.write("\n")
 
         f.close()
