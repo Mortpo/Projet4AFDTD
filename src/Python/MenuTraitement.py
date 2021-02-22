@@ -121,8 +121,8 @@ def showPatch(chemin,tailleX,tailleY,tailleZ):
 
 
 
-#chemin = "Data2D/Ez2DGaussPy.data"
+#chemin = "Data/Data2D/Ez2DGaussPy.data"
 #tailleX , tailleY = 60,60
-showPatch("Data3D\ShowPatch.txt",40+8*4,40+8*4,4+8*4)
+showPatch("Data\Data3D\ShowPatch.txt",40+8*4,40+8*4,4+8*4)
 #generateFixed3DSurface(image)
 #generate3DAnimation(0,250,-0.2,0.2,60,60,chemin)
