@@ -24,5 +24,5 @@ Les résultats présentés sont crée grace aux programme fait en Python
 
 ## Résultats du programme qui génére un patch en 3D
 
-![patch rectangulaire vue 1](Resultat/3D/Patch1.jpg)
-![patch rectangulaire vue 2](Resultat/3D/Patch2.jpg)
+![patch rectangulaire vue 1](Resultat/3D/Patch1.JPG)
+![patch rectangulaire vue 2](Resultat/3D/Patch2.JPG)
