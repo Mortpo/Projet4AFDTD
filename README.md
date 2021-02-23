@@ -32,7 +32,8 @@ Les résultats présentés sont crée grace aux programme fait en Python
 Les programmes finis sont en python. Le projet MicroOnde n'est pas terminé, il est l'ébauche d'un programme pour simuler une onde électromagnétique dans un patch en 3D.<br />
 Les programmes FDTD3D ne fonctionnes pas correctement.<br />
 Les programme FDTD2D focntion avec un patch prédéfini rectangulaire de 60x60 cellule avec la source aux coordonnées 25;25.<br />
-Il y a une version animation pour générer un fichier text où chaque images sont à la suites. Le fichier MenuTraitement.py permet de générer l'animation via des fonction à écrire en bas du script.
+Il y a une version animation pour générer un fichier text où chaque images sont à la suites.<br />
+Le fichier MenuTraitement.py permet de générer l'animation via des fonction à écrire en bas du script.<br />
 Les versions non animation des fichier de simulation génére un fichier texte avec les valeurs du dernier pas de la simulation.<br />
 
 
