@@ -3,17 +3,20 @@ import numpy as np
 import Materiau as Mat
 import Cellule
 import SimDevTestInfo as Dev
-from numba import jit
+
+
+#Classe pour la simulation elle ne modifie ne rien les parametres et ne stocke aucune donnees
 class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause des calcul de idhxyz
 
     def __init__(self,device:Dev.DeviceInfo):
         self.simdevice = device
         self.tailleX,self.tailleY,self.tailleZ = self.simdevice.patch.shape
 
-
+#fonction du signal à envoyer
     def sourcePulse(self,t0,spread,T):
-        pulse = np.exp(-0.5 * (pow((t0 - T) / spread, 2.0)))
+        pulse = np.exp(-0.5 * (pow((t0 - T) / spread, 2.0))) #gauss
         return pulse
+
 
     def EzInc(self):
         for j in range(1,self.simdevice.patch.shape[1]):
@@ -47,7 +50,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                 self.simdevice.patch[self.simdevice.ia-1][j][k].hy = self.simdevice.patch[self.simdevice.ia-1][j][k].hy - 0.5  * self.simdevice.ez_inc[j]
                 self.simdevice.patch[self.simdevice.ib][j][k].hy = self.simdevice.patch[self.simdevice.ib][j][k].hy + 0.5  * self.simdevice.ez_inc[j]
         
-
+#calcul
     def calculateDx(self):
         for i in range(self.tailleX):
             for j in range(self.tailleY):
@@ -58,7 +61,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].idx = 0
                         self.simdevice.patch[i][j][k].dx = self.simdevice.gj3[j] * self.simdevice.gk3[k] * self.simdevice.patch[i][j][k].dx + self.simdevice.gj2[j] * self.simdevice.gk2[k] * 0.5 * (self.simdevice.curl_h + (self.simdevice.gi1[i] * self.simdevice.patch[i][j][k].idx))
-
+#calcul
     def calculateDy(self):
         for i in range(self.tailleX):
             for j in range(self.tailleY):
@@ -69,7 +72,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].idy = 0
                         self.simdevice.patch[i][j][k].dy = self.simdevice.gi3[i] * self.simdevice.gk3[k] * self.simdevice.patch[i][j][k].dy + self.simdevice.gi2[i] * self.simdevice.gk2[k] * 0.5 * (self.simdevice.curl_h + (self.simdevice.gj1[j] * self.simdevice.patch[i][j][k].idy))
-    
+#calcul
     def calculateDz(self):
         for i in range(self.tailleX):
             for j in range(self.tailleY):
@@ -80,7 +83,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].idz = 0
                         self.simdevice.patch[i][j][k].dz = self.simdevice.gi3[i] * self.simdevice.gj3[j] * self.simdevice.patch[i][j][k].dz + self.simdevice.gi2[i] * self.simdevice.gj2[j] * 0.5 * (self.simdevice.curl_h + (self.simdevice.gk1[k] * self.simdevice.patch[i][j][k].idz))
-    
+#calcul
     def calculateE(self):
         for i in range(self.tailleX):
             for j in range(self.tailleY):
@@ -89,7 +92,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         self.simdevice.patch[i][j][k].ey = self.simdevice.patch[i][j][k].gay * self.simdevice.patch[i][j][k].dy
                         self.simdevice.patch[i][j][k].ez = self.simdevice.patch[i][j][k].gaz * self.simdevice.patch[i][j][k].dz
 
-
+#calcul
     def calculateHx(self):
         for i in range(self.tailleX-1):
             for j in range(self.tailleY-1):
@@ -100,7 +103,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].ihx = 0
                         self.simdevice.patch[i][j][k].hx = self.simdevice.fj3[j] * self.simdevice.fk3[k] * self.simdevice.patch[i][j][k].hx+ self.simdevice.fj2[j] * self.simdevice.fk2[k] * 0.5 * (self.simdevice.curl_e + (self.simdevice.fi1[i] * self.simdevice.patch[i][j][k].ihx))
-
+#calcul
     def calculateHy(self):
         for i in range(self.tailleX-1):
             for j in range(self.tailleY-1):
@@ -111,7 +114,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].ihy = 0
                         self.simdevice.patch[i][j][k].hy = self.simdevice.fi3[i] * self.simdevice.fk3[k] * self.simdevice.patch[i][j][k].hy + self.simdevice.fi2[i] * self.simdevice.fk2[k] * 0.5 * (self.simdevice.curl_e + (self.simdevice.fj1[j] * self.simdevice.patch[i][j][k].ihy))
-    
+#calcul
     def calculateHz(self):
         for i in range(self.tailleX-1):
             for j in range(self.tailleY-1):
@@ -122,7 +125,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
                         else:
                             self.simdevice.patch[i][j][k].ihz = 0
                         self.simdevice.patch[i][j][k].hz = self.simdevice.fi3[i] *self.simdevice.fj3[j] * self.simdevice.patch[i][j][k].hz + self.simdevice.fi2[i] * self.simdevice.fj2[j] * 0.5 * (self.simdevice.curl_e + (self.simdevice.fk1[k] * self.simdevice.patch[i][j][k].ihz))
-    
+    #ecrit dans un fichier le champ Ez à une certaine couche
     def printToFile(self,couche , nomfichier):
         f=open(nomfichier+".txt","w")
         for i in range(self.tailleX):
@@ -131,6 +134,7 @@ class Simulation: #potentiel pb si cell non pml genre elle devient pml a cause d
             f.write("\n")
         f.close()
 
+#ecrit l'impulsion dans le patch
     def input(self,T,position):
         self.simdevice.patch[position[0]][position[1]][position[2]].dz = self.sourcePulse(150.0,25.0,T)
         

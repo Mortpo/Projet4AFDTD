@@ -4,6 +4,7 @@ import Materiau as Mat
 import Cellule
 #numpy fft
 
+#defini les parametre de la simulation et les parametres 
 class DeviceInfo:
 
 
@@ -41,14 +42,14 @@ class DeviceInfo:
 
 
 
-
+#permet de reecrire les parametres si il y a eu un changement
     def initialise(self):
         setPML()
         print("Parametre deltaX,Y,Z et T ok = True Sinon False" + testCellSize(self.timeStep,self.rawPatch.cellSizeX,self.rawPatch.cellSizeY,self.rawPatch.cellSizeZ))
         self.patch.convertRawPatchToCell(self.rawPatch)
 
 
-
+#test la taille des cellules comparai au temps
     def testCellSize(self):
         valide = False
         if self.timeStep <= (1/self.celerite) * np.sqrt((1/(self.cellSizeX*self.cellSizeX)) + (1/(self.cellSizeY*self.cellSizeY)) + (1/(self.cellSizeZ*self.cellSizeZ))):
@@ -60,7 +61,7 @@ class DeviceInfo:
 
 
 
-
+#convertie le patch de la classe antenne en patch avec les cellules de la classe Cellule avec les bons matériaux
     def convertRawPatchToCell(self,rawPatch:Antenne):
         tailleX,tailleY,tailleZ = rawPatch.patch.shape
         patch = np.empty(((rawPatch.patch.shape)),dtype=object )
@@ -80,8 +81,9 @@ class DeviceInfo:
         patch = np.pad(patch, ((padding,padding),(padding,padding),(padding,padding)), 'constant', constant_values=Cellule.Cellule(Mat.PML))
         return patch
 
+#Calcul les paramètre de PML
     def setPML(self):
-        #Surement faux pas le bon patch il faut rajouter les couches pml
+
         #LES COUCHE DE PML MANGE LE PATCH
         tailleX,tailleY,tailleZ = self.patch.shape
 
@@ -161,6 +163,7 @@ class DeviceInfo:
             self.fk3[k] = (1.0-xn)/(1.0+xn) 
             self.fk3[tailleZ-k-2] = (1.0-xn)/(1.0+xn)
 
+#Ecrit le patch dans un fichier avec les couche d'air et de pml
     def printfile(self,nameOfTheFile):
         dessusX,dessusY,profondeur = self.patch.shape
         f = open(str(nameOfTheFile)+".txt","w")

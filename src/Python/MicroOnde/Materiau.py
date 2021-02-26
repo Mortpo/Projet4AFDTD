@@ -1,3 +1,4 @@
+#définie les materiaux et fait la liaison entre image et patch dans la memoire
 class Materiau:
 
     def __init__(self,conductivite,rgbValue,patchValue):
@@ -7,7 +8,7 @@ class Materiau:
         self.rgbValue=rgbValue
         self.patchValue=patchValue
 
-#def Materiau
+#definition des materiaux
 eps_sub=2.2
 isolant = Materiau([1/eps_sub,1/eps_sub,1/eps_sub],[255,255,255],0)
 patch = Materiau([0,0,1],[0,0,0],1)

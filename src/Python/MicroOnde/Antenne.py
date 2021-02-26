@@ -4,7 +4,7 @@ import Materiau as Mat
 
 
 
-
+#Permet de gerener une antenne à partir d'image
 class Antenne:
     
 
@@ -21,7 +21,7 @@ class Antenne:
 
 
 
-
+#Charge une couche de patch à partir d'une image près définie
     def loadLayerFromPicture(self,pathToLayer): #1 px 1 cellule
         layer = CV.imread(pathToLayer)
 
@@ -33,12 +33,11 @@ class Antenne:
                     if bool(set(layer[x][y]).intersection(set(Mat.MateriauType[z].rgbValue))):
                         couche[x][y][0] = Mat.MateriauType[z].patchValue
         return couche
-
+#ecrit le patch dans un fichier texte en partant du bas du patch (indice 0)
     def printfile(self,nameOfTheFile):
         dessusX,dessusY,profondeur = self.patch.shape
         f = open(str(nameOfTheFile)+".txt","w")
         print("File writen to "+ str(nameOfTheFile)+".txt")
-        f.write("Bottom\n")
         for z in range(profondeur):
             for x in range(dessusX):
                 for y in range(dessusY):

@@ -37,7 +37,7 @@ def getImageForAnimation(indice ,tailleX,tailleY, chemin):
 
 
 
-
+#Genere une animation 3D
 def generate3DAnimation(start,end,Valmin,Valmax,tailleX,tailleY, chemin):
     
     X, Y = np.meshgrid(tailleX,tailleY)
@@ -91,7 +91,7 @@ def generate3DAnimation(start,end,Valmin,Valmax,tailleX,tailleY, chemin):
 
 
 
-
+#Affichage du patch attention au taille la taille en Z peut etre trompeuse
 def showPatch(chemin,tailleX,tailleY,tailleZ):
     patch = np.zeros((tailleX,tailleY,tailleZ),dtype = int)
     with open(chemin, newline='') as csvdata:
@@ -106,8 +106,6 @@ def showPatch(chemin,tailleX,tailleY,tailleZ):
             if j == 0:
                 k= (k+1)
            
-    #point_cloud = mlab.points3d(patch,opacity = 0.5,transparent=True,line_width=1.0,scale_factor=0.3,mask_points=20,mode='cube',scale_mode='scalar',vmin = 0,vmax = 4)
-    #mlab.show()
     
     p = pv.Plotter(window_size=(1080,720))
     mesh = pv.UniformGrid()
